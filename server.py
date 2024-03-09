@@ -67,6 +67,8 @@ def arm_parachute():
 def arm_parachute():
     print('disarm-parachute')
 
+    camera.stop()
+
     send_status(False, False)
 
 @socketio.on('reset-parachute')
@@ -98,10 +100,11 @@ def launch():
         allow_launch = False
 
 @socketio.on('abort-launch')
-def cancel_launch():
+def abort_launch():
     print('abort launch')
     global allow_launch 
     allow_launch = False
+    camera.stop()
 
 def read_and_send_data():
     while True:
