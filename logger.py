@@ -2,7 +2,9 @@ import os
 import logging
 from logging.handlers import RotatingFileHandler
 
-log_file_path = '/var/log/nakaiathon'
+current_directory = os.path.dirname(os.path.abspath(__file__))
+log_file_path = os.path.join(current_directory, 'log')
+
 log_level = 'INFO'
 
 os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
