@@ -113,9 +113,10 @@ def abort_launch():
 
 def read_and_send_data():
     while True:
-        logger.info(f"Altitude: {calculate_altitude(barometer.pressure, barometer.temperature)}")
-        send_rocket_data(1)
-        gevent.sleep(1) # Send data every 1 second, change this
+        altitude = calculate_altitude(barometer.pressure, barometer.temperature)
+        logger.info(f"Altitude: {altitude}")
+        send_rocket_data(altitude)
+        gevent.sleep(0.2) # Send data every 1 second, change this
 
 @app.route('/')
 def index():
