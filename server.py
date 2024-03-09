@@ -2,7 +2,6 @@ import socketio
 import time
 import gevent
 import board
-import ssl
 import os
 from flask import Flask, send_from_directory
 from flask_socketio import SocketIO
