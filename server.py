@@ -3,6 +3,7 @@ import time
 import gevent
 import board
 import ssl
+import os
 from flask import Flask, send_from_directory
 from flask_socketio import SocketIO
 import numpy as np
@@ -115,9 +116,12 @@ def index():
 if __name__ == '__main__':
     try:
         gevent.spawn(read_and_send_data)
+        current_directory = os.path.dirname(os.path.abspath(__file__))
+        ssl_cert_path = os.path.join(current_directory, 'cert.pem')
+        ssl_key_path = os.path.join(current_directory, 'key.pem')
 
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-        context.load_cert_chain('cert.pem', 'key.pem')
+        context.load_cert_chain(ssl_cert_path, ssl_key_path)
         socketio.run(app, port=5000, host='0.0.0.0', debug=False, ssl_context=context)
     except KeyboardInterrupt:
         camera.stop()
