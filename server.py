@@ -2,16 +2,15 @@ import socketio
 import time
 import gevent
 import board
-from flask import Flask, Response
+from flask import Flask, send_from_directory
 from flask_socketio import SocketIO
-from camera_output import CameraOutput
 from drivers.servo import Servo
 from drivers.lps2x_full import LPS22
 from drivers.camera import Camera
 
 allow_launch = False
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='fe', static_url_path='')
 socketio = SocketIO(app, cors_allowed_origins='*', async_mode='gevent')
 servo = Servo(18)
 barometer = LPS22(board.I2C())
@@ -119,10 +118,12 @@ def read_and_send_data():
         send_rocket_data(1)
         gevent.sleep(1) # Send data every 1 second, change this
 
+@app.route('/')
+def index():
+    return send_from_directory(app.static_folder, 'index.html')
+
 if __name__ == '__main__':
     try:
-        output = CameraOutput(f'video-{time.time()}.h264', 'mjpeg')
-
         gevent.spawn(read_and_send_data)
 
         socketio.run(app, port=5000, host='0.0.0.0', debug=False)
