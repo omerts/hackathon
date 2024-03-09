@@ -115,7 +115,6 @@ if __name__ == '__main__':
     try:
         gevent.spawn(read_and_send_data)
 
-        context = ('cert.pem', 'key.pem')
-        socketio.run(app, port=5000, host='0.0.0.0', debug=False, ssl_context=context)
+        socketio.run(app, port=5000, host='0.0.0.0', debug=False, ssl_context='adhoc')
     except KeyboardInterrupt:
         camera.stop()
