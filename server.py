@@ -47,9 +47,8 @@ def connect():
 
 # Event handler for messages
 @socketio.event
-def message(sid, data):
+def message(data):
     print('message ', data)
-    socketio.send(sid, f"Reply: {data}")
 
 # Event handler for disconnections
 @socketio.event
