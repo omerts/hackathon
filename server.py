@@ -10,6 +10,7 @@ import numpy as np
 from drivers.servo import Servo
 from drivers.lps2x_full import LPS22
 from drivers.camera import Camera
+from logger import logger
 
 allow_launch = False
 
@@ -105,7 +106,7 @@ def cancel_launch():
 
 def read_and_send_data():
     while True:
-        print(calculate_altitude(barometer.pressure, barometer.temperature))
+        logger.info(f"Altitude: {calculate_altitude(barometer.pressure, barometer.temperature)}")
         send_rocket_data(1)
         gevent.sleep(1) # Send data every 1 second, change this
 
