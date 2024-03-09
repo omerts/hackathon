@@ -4,6 +4,7 @@ import gevent
 import board
 from flask import Flask, send_from_directory
 from flask_socketio import SocketIO
+import numpy as np
 from drivers.servo import Servo
 from drivers.lps2x_full import LPS22
 from drivers.camera import Camera
@@ -16,30 +17,18 @@ servo = Servo(18)
 barometer = LPS22(board.I2C())
 camera = Camera()
 
-def altitude_from_pressure_temperature(pressure, temperature):
-    """
-    Calculate altitude from atmospheric pressure and temperature.
-    
-    Parameters:
-    - pressure: Atmospheric pressure in hPa (hectopascals)
-    - temperature: Ambient temperature in degrees Celsius
-    
-    Returns:
-    - Altitude in meters
-    """
+def calculate_altitude(pressure_hpa, temperature_c):
     # Constants
-    P0 = 1013.25  # Sea level standard atmospheric pressure, hPa
-    T0 = 288.15  # Sea level standard temperature, Kelvin
-    g = 9.80665  # Gravitational acceleration, m/s^2
-    L = 0.0065  # Temperature lapse rate, K/m
-    R = 287.05  # Ideal gas constant, J/(kg·K)
-    
-    # Convert temperature from Celsius to Kelvin
-    T = temperature + 273.15
-    
-    # Calculate altitude using the hypsometric formula
-    altitude = (T0 / L) * (((pressure / P0) ** (-(R * L) / (g * R))) - 1)
-    
+    temp_kelvin = temperature_c + 273.15  # Convert temperature to Kelvin
+    sea_level_pressure = 1013.25  # Sea level standard atmospheric pressure in hPa
+    gravitational_acceleration = 9.80665  # Acceleration due to gravity in m/s^2
+    molar_mass_air = 0.0289644  # Molar mass of Earth's air in kg/mol
+    universal_gas_constant = 8.3144598  # Universal gas constant in J/(mol*K)
+
+    # Barometric formula
+    altitude = ((universal_gas_constant * temp_kelvin) / (gravitational_acceleration * molar_mass_air)) \
+        * np.log(sea_level_pressure / pressure_hpa) # In meters
+
     return altitude
 
 def send_status(parachute_armed, parachute_deployed, is_launched = False):
