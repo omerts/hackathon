@@ -43,21 +43,21 @@ def send_rocket_data(altitude):
 # Event handler for new connections
 @socketio.event
 def connect():
-    print('Client connected')
+    logger.info('Client connected')
 
 # Event handler for messages
 @socketio.event
 def message(data):
-    print('message ', data)
+    logger.info('message ', data)
 
 # Event handler for disconnections
 @socketio.event
 def disconnect():
-    print('client disconnected')
+    logger.info('client disconnected')
 
 @socketio.on('arm-parachute')
 def arm_parachute():
-    print('arm-parachute')
+    logger.info('arm-parachute')
 
     camera.start()
 
@@ -65,7 +65,7 @@ def arm_parachute():
 
 @socketio.on('disarm-parachute')
 def arm_parachute():
-    print('disarm-parachute')
+    logger.info('disarm-parachute')
 
     camera.stop()
 
@@ -73,19 +73,19 @@ def arm_parachute():
 
 @socketio.on('reset-parachute')
 def reset_parachute():
-    print('reset-parachute')
+    logger.info('reset-parachute')
 
     send_status(False, False)
 
 @socketio.on('deploy-parachute')
 def deploy_parachute():
-    print('deploy-parachute')
+    logger.info('deploy-parachute')
 
     send_status(True, True)
 
 @socketio.on('launch')
 def launch():
-    print('launch')
+    logger.info('launch')
     send_status(True, True, True)
     
     global allow_launch 
@@ -94,17 +94,22 @@ def launch():
     gevent.sleep(5)
     
     if allow_launch:
+        logger.info('Running servo')
         servo.right()
         gevent.sleep(2)
         servo.stop()
         allow_launch = False
+    else:
+        logger.info('Aborted servo due to abort command')
+
 
 @socketio.on('abort-launch')
 def abort_launch():
-    print('abort launch')
+    logger.info('abort launch')
     global allow_launch 
     allow_launch = False
     camera.stop()
+    send_status(False, False, False)
 
 def read_and_send_data():
     while True:
