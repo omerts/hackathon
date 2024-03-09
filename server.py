@@ -70,13 +70,13 @@ def arm_parachute():
     send_status(False, False)
 
 @socketio.on('reset-parachute')
-def arm_parachute():
+def reset_parachute():
     print('reset-parachute')
 
     send_status(False, False)
 
 @socketio.on('deploy-parachute')
-def arm_parachute():
+def deploy_parachute():
     print('deploy-parachute')
 
     send_status(True, True)
