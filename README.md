@@ -14,7 +14,7 @@ sudo pigpiod
 ### Generate ssl keys
 
 ```
-openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/CN=192.168.50.129"
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout private.key -out certificate.crt
 ```
 
 ### Examples

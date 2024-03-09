@@ -117,8 +117,8 @@ if __name__ == '__main__':
     try:
         gevent.spawn(read_and_send_data)
         current_directory = os.path.dirname(os.path.abspath(__file__))
-        ssl_cert_path = os.path.join(current_directory, 'cert.pem')
-        ssl_key_path = os.path.join(current_directory, 'key.pem')
+        ssl_cert_path = os.path.join(current_directory, 'certificate.crt')
+        ssl_key_path = os.path.join(current_directory, 'private.key')
 
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
         context.load_cert_chain(ssl_cert_path, ssl_key_path)
